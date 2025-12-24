@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Navideño Familiar</title>
+    <style>
+        :root {
+            --red: #D42426;
+            --green: #2F5233;
+            --gold: #F1D570;
+            --bg: #f0f0f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        h1 {
+            color: var(--red);
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px var(--gold);
+        }
+
+        p { color: #555; margin-bottom: 20px; }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid var(--green);
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            user-select: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .card:active { transform: scale(0.95); }
+
+        .card.checked {
+            background-color: var(--red);
+            color: white;
+            border-color: var(--gold);
+            text-decoration: line-through;
+            opacity: 0.9;
+        }
+
+        .reset-btn {
+            margin-top: 30px;
+            padding: 10px 20px;
+            background: var(--green);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🎄 Bingo Navideño 🎅</h1>
+    <p>¡Toca la frase cuando alguien la diga!</p>
+
+    <div class="grid-container" id="bingoBoard">
+        </div>
+
+    <button class="reset-btn" onclick="resetGame()">Reiniciar Tablero</button>
+
+    <script>
+        // Aquí están las frases que generamos
+        const phrases = [
+            "¿Y el novio/a para cuándo?",
+            "Hablan de política",
+            "Queja sobre la comida",
+            "Chiste malo de tío/cuñado",
+            "Sacan el celular en la mesa",
+            "Propósito: gimnasio/dieta",
+            "Discusión de fútbol",
+            "Se acabó el hielo/pan",
+            "Pregunta incómoda trabajo/estudio",
+            "Alguien se mancha",
+            "Brindis vergonzoso",
+            "Pelea por la última porción",
+            "Villancicos de fondo",
+            "'Qué rápido pasó el año'",
+            "Alguien se duerme en el sofá",
+            "Hablan del calor/clima",
+            "Muestran fotos de bebés/perros",
+            "Alguien eructa 'sin querer'",
+            "Critican a un pariente ausente",
+            "Se rompe una copa"
+        ];
+
+        const board = document.getElementById('bingoBoard');
+
+        // Cargar estado guardado o iniciar nuevo
+        function initGame() {
+            board.innerHTML = '';
+            phrases.forEach((text, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerText = text;
+                card.onclick = () => toggleCard(card, index);
+                
+                // Recuperar si estaba marcado
+                if(localStorage.getItem('bingo_' + index) === 'true') {
+                    card.classList.add('checked');
+                }
+                
+                board.appendChild(card);
+            });
+        }
+
+        function toggleCard(element, index) {
+            element.classList.toggle('checked');
+            // Guardar en memoria del teléfono por si recargan la página
+            const isChecked = element.classList.contains('checked');
+            localStorage.setItem('bingo_' + index, isChecked);
+        }
+
+        function resetGame() {
+            if(confirm('¿Borrar todo y empezar de cero?')) {
+                localStorage.clear();
+                initGame();
+            }
+        }
+
+        initGame();
+    </script>
+</body>
+</html>
